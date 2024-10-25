@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Camera.css";
 
-function CameraComponent() {
+function Camera() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isCaptured, setIsCaptured] = useState(false);
@@ -61,7 +61,6 @@ function CameraComponent() {
       setIsCaptured(true);
 
       const dataUrl = canvasRef.current.toDataURL(imageFormat);
-      console.log(dataUrl);
       setImageDataUrl(dataUrl);
     }
   };
@@ -74,6 +73,41 @@ function CameraComponent() {
     startCamera();
   };
 
+  const uploadImageAndNavigate = async () => {
+    if (imageDataUrl) {
+      const payload = {
+        base64Image: imageDataUrl,
+      };
+      console.log(payload);
+
+      // Send the image to your backend
+      try {
+        const uploadResponse = await fetch("YOUR_BACKEND_ENDPOINT_HERE", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Indicates that the request body is JSON
+          },
+          body: JSON.stringify(payload), // Convert the payload object to a JSON string
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error("Image upload failed");
+        }
+
+        setSaveMessage("Image uploaded successfully!");
+
+        // Navigate to the Process component after successful upload
+        navigate("/process");
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        setSaveMessage("Failed to upload image.");
+      } finally {
+        // Optional: Reset the camera after upload
+        retakeImage();
+      }
+    }
+  };
+
   const saveImage = () => {
     if (imageDataUrl) {
       const link = document.createElement("a");
@@ -83,6 +117,7 @@ function CameraComponent() {
 
       setSaveMessage("Image saved!");
 
+      // Optionally restart camera or perform another action
       startCamera();
 
       setTimeout(() => {
@@ -107,27 +142,6 @@ function CameraComponent() {
         style={{ display: isCaptured ? "block" : "none" }}
       />
 
-      {/* <div className="toolbar">
-        <label>
-          <input
-            type="radio"
-            value="image/png"
-            checked={imageFormat === "image/png"}
-            onChange={() => setImageFormat("image/png")}
-          />
-          PNG
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="image/jpeg"
-            checked={imageFormat === "image/jpeg"}
-            onChange={() => setImageFormat("image/jpeg")}
-          />
-          JPEG
-        </label>
-      </div> */}
-
       {isCaptured ? (
         <>
           <button onClick={retakeImage} className="button retake">
@@ -136,10 +150,7 @@ function CameraComponent() {
           <button onClick={saveImage} className="button save">
             Save Image
           </button>
-          <button
-            onClick={() => navigate("/process")}
-            className="button retake"
-          >
+          <button onClick={uploadImageAndNavigate} className="button save">
             Process
           </button>
         </>
@@ -158,4 +169,4 @@ function CameraComponent() {
   );
 }
 
-export default CameraComponent;
+export default Camera;
