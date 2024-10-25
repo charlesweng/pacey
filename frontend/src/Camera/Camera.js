@@ -1,14 +1,16 @@
 import React, { useRef, useEffect, useState } from "react";
-import "./CameraComponent.css";
+import { useNavigate } from "react-router-dom";
+import "./Camera.css";
 
 function CameraComponent() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isCaptured, setIsCaptured] = useState(false);
   const [error, setError] = useState(null);
-  const [imageFormat, setImageFormat] = useState("image/png");
+  const [imageFormat] = useState("image/png");
   const [imageDataUrl, setImageDataUrl] = useState(null);
   const [saveMessage, setSaveMessage] = useState("");
+  const navigate = useNavigate();
 
   const startCamera = async () => {
     try {
@@ -59,6 +61,7 @@ function CameraComponent() {
       setIsCaptured(true);
 
       const dataUrl = canvasRef.current.toDataURL(imageFormat);
+      console.log(dataUrl);
       setImageDataUrl(dataUrl);
     }
   };
@@ -104,7 +107,7 @@ function CameraComponent() {
         style={{ display: isCaptured ? "block" : "none" }}
       />
 
-      <div className="toolbar">
+      {/* <div className="toolbar">
         <label>
           <input
             type="radio"
@@ -123,7 +126,7 @@ function CameraComponent() {
           />
           JPEG
         </label>
-      </div>
+      </div> */}
 
       {isCaptured ? (
         <>
@@ -132,6 +135,12 @@ function CameraComponent() {
           </button>
           <button onClick={saveImage} className="button save">
             Save Image
+          </button>
+          <button
+            onClick={() => navigate("/process")}
+            className="button retake"
+          >
+            Process
           </button>
         </>
       ) : (
