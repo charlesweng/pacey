@@ -1,21 +1,22 @@
 -- use flask_app;
 
-CREATE TABLE Customer (
-    customer_id INT AUTO_INCREMENT NOT NULL,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(100) NOT NULL,
-	PRIMARY KEY(customer_id)
+-- CREATE TABLE Doctor(
+-- 	doctor_id INT AUTO_INCREMENT NOT NULL,
+-- 	doctor_name VARCHAR(50) NOT NULL UNIQUE,
+-- 	PRIMARY KEY(patient_id)
+-- );
+
+CREATE TABLE Patient (
+    patient_id INT AUTO_INCREMENT,
+    pacemaker_dependent INT NOT NULL,
+    incision_location VARCHAR(12) NOT NULL,
+    pacemaker_manufacturer VARCHAR(50),
+    magnet_response VARCHAR(20),
+    impedance INT NOT NULL,
+    image_path VARCHAR(13383),
+    PRIMARY KEY (patient_id)
 );
 
-CREATE TABLE Account (
-	account_id INT AUTO_INCREMENT NOT NULL,
-	customer_id INT,
-	account_name VARCHAR(50) NOT NULL,
-	balance FLOAT(10,2),
-	account_type VARCHAR(100) NOT NULL,
-	PRIMARY KEY(account_id)
-	-- CONSTRAINT FK_CustomerAccount FOREIGN KEY (customer_id) REFERENCES Customer(customer_id)
-);
 
-INSERT INTO Customer VALUES(DEFAULT, 'charles', 'weng');
--- INSERT INTO Account VALUES(DEFAULT, 1, 'checkings', 1000, 'checkings');
+-- Example population for table
+INSERT INTO Patient VALUES(DEFAULT, '0', 'Below', 'ST JUDE', 'EGM', '34', "bingus");
