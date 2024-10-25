@@ -10,7 +10,7 @@ function Camera() {
   const [error, setError] = useState(null);
   const [imageFormat] = useState("image/png");
   const [imageDataUrl, setImageDataUrl] = useState(null);
-  const [saveMessage, setSaveMessage] = useState("");
+  // const [saveMessage, setSaveMessage] = useState("");
   const navigate = useNavigate();
 
   const startCamera = async () => {
@@ -83,17 +83,17 @@ function Camera() {
 
       // Send the image to your backend
       try {
-        // const uploadResponse = await fetch("YOUR_BACKEND_ENDPOINT_HERE", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json", // Indicates that the request body is JSON
-        //   },
-        //   body: JSON.stringify(payload), // Convert the payload object to a JSON string
-        // });
+        const uploadResponse = await fetch("YOUR_BACKEND_ENDPOINT_HERE", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Indicates that the request body is JSON
+          },
+          body: JSON.stringify(payload), // Convert the payload object to a JSON string
+        });
 
-        // if (!uploadResponse.ok) {
-        //   throw new Error("Image upload failed");
-        // }
+        if (!uploadResponse.ok) {
+          throw new Error("Image upload failed");
+        }
 
         // setSaveMessage("Image uploaded successfully!");
 
@@ -101,7 +101,7 @@ function Camera() {
         navigate("/process");
       } catch (error) {
         console.error("Error uploading image:", error);
-        setSaveMessage("Failed to upload image.");
+        // setSaveMessage("Failed to upload image.");
       } finally {
         // Optional: Reset the camera after upload
         retakeImage();
@@ -165,11 +165,11 @@ function Camera() {
         </button>
       )}
 
-      {saveMessage && (
+      {/* {saveMessage && (
         <div className="overlay">
           <div className="message">{saveMessage}</div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
