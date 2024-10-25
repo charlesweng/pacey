@@ -3,7 +3,7 @@ import mariadb
 config = {
      'user': 'root',
      'password': '',
-     'host': '127.0.0.1', # try changing to localhost
+     'host': 'localhost', # try changing to localhost
      'port': 3306,
      'database': 'flask_app',
  }
