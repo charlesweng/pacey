@@ -15,6 +15,14 @@ function About() {
         to provide a simple and interactive interface for users to take photos
         and apply various computer vision algorithms.
       </p>
+      <h2>What we did</h2>
+      <ul>
+        <li>Used Python Tesseract OCR module to read text on image.</li>
+        <li>Capture images in real-time.</li>
+        <li>Process captured images with OpenCV functions.</li>
+        <li>Interactive user interface for easy navigation.</li>
+      </ul>
+
       <h2>Features</h2>
       <ul>
         <li>Access the device camera for image capturing.</li>
