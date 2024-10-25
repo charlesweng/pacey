@@ -3,11 +3,11 @@ import mariadb
 config = {
      'user': 'root',
      'password': '',
-     'host': 'localhost', # try changing to localhost
+     'host': '127.0.0.1', # try changing to localhost
      'port': 3306,
      'database': 'flask_app',
  }
-
+print("Starting Test File...")
 conn = mariadb.connect(**config)
 cursor = conn.cursor()
 query = f"SELECT customer_id, username FROM Customer WHERE username='charles' AND password='weng';"
