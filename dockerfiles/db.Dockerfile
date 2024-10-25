@@ -9,14 +9,11 @@ RUN apt-get -y install python3 python3-pip gcc libmariadb3 libmariadb-dev
 
 WORKDIR /app
 
-COPY entrypoint.sh /
-RUN chmod +x /entrypoint.sh
-
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY db /docker-entrypoint-initdb.d
-COPY . .
 
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["-c"]
+EXPOSE 3306
+
+CMD ["mysqld"]
