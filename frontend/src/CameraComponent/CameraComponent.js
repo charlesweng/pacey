@@ -1,16 +1,15 @@
 import React, { useRef, useEffect, useState } from "react";
-import "./CameraComponent.css"; // Import the CSS file
+import "./CameraComponent.css";
 
 function CameraComponent() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isCaptured, setIsCaptured] = useState(false);
   const [error, setError] = useState(null);
-  const [imageFormat, setImageFormat] = useState("image/png"); // Default format
-  const [imageDataUrl, setImageDataUrl] = useState(null); // Store the image data URL
-  const [saveMessage, setSaveMessage] = useState(""); // Message to display after saving
+  const [imageFormat, setImageFormat] = useState("image/png");
+  const [imageDataUrl, setImageDataUrl] = useState(null);
+  const [saveMessage, setSaveMessage] = useState("");
 
-  // Function to start the camera
   const startCamera = async () => {
     try {
       const constraints = {
@@ -36,7 +35,6 @@ function CameraComponent() {
 
     const videoElement = videoRef.current;
 
-    // Cleanup camera stream on component unmount
     return () => {
       if (videoElement && videoElement.srcObject) {
         const stream = videoElement.srcObject;
@@ -60,10 +58,8 @@ function CameraComponent() {
       );
       setIsCaptured(true);
 
-      // Get image data URL in the selected format
       const dataUrl = canvasRef.current.toDataURL(imageFormat);
-      setImageDataUrl(dataUrl); // Store the image data URL
-      console.log(dataUrl); // Use this data URL to display or save the image
+      setImageDataUrl(dataUrl);
     }
   };
 
@@ -71,9 +67,7 @@ function CameraComponent() {
     const context = canvasRef.current.getContext("2d");
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     setIsCaptured(false);
-    setImageDataUrl(null); // Clear the stored image data URL
-
-    // Restart the camera stream
+    setImageDataUrl(null);
     startCamera();
   };
 
@@ -81,16 +75,13 @@ function CameraComponent() {
     if (imageDataUrl) {
       const link = document.createElement("a");
       link.href = imageDataUrl;
-      link.download = `captured_image.${imageFormat.split("/")[1]}`; // Use the format as file extension
+      link.download = `captured_image.${imageFormat.split("/")[1]}`;
       link.click();
 
-      // Show the "Image saved" message
       setSaveMessage("Image saved!");
 
-      // Restart the camera stream after saving the image
       startCamera();
 
-      // Clear the message after 2 seconds
       setTimeout(() => {
         setSaveMessage("");
       }, 2000);
@@ -106,8 +97,6 @@ function CameraComponent() {
         playsInline
         style={{
           display: isCaptured ? "none" : "block",
-          width: "100%",
-          height: "auto",
         }}
       />
       <canvas
@@ -115,43 +104,42 @@ function CameraComponent() {
         style={{ display: isCaptured ? "block" : "none" }}
       />
 
-      {!isCaptured && (
-        <div>
-          <p>Select image format:</p>
-          <label>
-            <input
-              type="radio"
-              value="image/png"
-              checked={imageFormat === "image/png"}
-              onChange={() => setImageFormat("image/png")}
-            />
-            PNG
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="image/jpeg"
-              checked={imageFormat === "image/jpeg"}
-              onChange={() => setImageFormat("image/jpeg")}
-            />
-            JPEG
-          </label>
-        </div>
-      )}
+      <div className="toolbar">
+        <label>
+          <input
+            type="radio"
+            value="image/png"
+            checked={imageFormat === "image/png"}
+            onChange={() => setImageFormat("image/png")}
+          />
+          PNG
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="image/jpeg"
+            checked={imageFormat === "image/jpeg"}
+            onChange={() => setImageFormat("image/jpeg")}
+          />
+          JPEG
+        </label>
+      </div>
 
-      <button onClick={retakeImage} className="button">
-        Retake Image
-      </button>
-      <button onClick={captureImage} className="button">
-        Capture Image
-      </button>
-      {isCaptured && (
-        <button onClick={saveImage} className="button">
-          Save Image
+      {isCaptured ? (
+        <>
+          <button onClick={retakeImage} className="button retake">
+            Retake Image
+          </button>
+          <button onClick={saveImage} className="button save">
+            Save Image
+          </button>
+        </>
+      ) : (
+        <button onClick={captureImage} className="button capture">
+          Capture Image
         </button>
       )}
 
-      {/* Overlay for save message */}
       {saveMessage && (
         <div className="overlay">
           <div className="message">{saveMessage}</div>
