@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Camera.css";
+import "../App.css";
 
 function Camera() {
   const videoRef = useRef(null);
@@ -82,19 +83,19 @@ function Camera() {
 
       // Send the image to your backend
       try {
-        const uploadResponse = await fetch("YOUR_BACKEND_ENDPOINT_HERE", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json", // Indicates that the request body is JSON
-          },
-          body: JSON.stringify(payload), // Convert the payload object to a JSON string
-        });
+        // const uploadResponse = await fetch("YOUR_BACKEND_ENDPOINT_HERE", {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json", // Indicates that the request body is JSON
+        //   },
+        //   body: JSON.stringify(payload), // Convert the payload object to a JSON string
+        // });
 
-        if (!uploadResponse.ok) {
-          throw new Error("Image upload failed");
-        }
+        // if (!uploadResponse.ok) {
+        //   throw new Error("Image upload failed");
+        // }
 
-        setSaveMessage("Image uploaded successfully!");
+        // setSaveMessage("Image uploaded successfully!");
 
         // Navigate to the Process component after successful upload
         navigate("/process");
@@ -108,23 +109,23 @@ function Camera() {
     }
   };
 
-  const saveImage = () => {
-    if (imageDataUrl) {
-      const link = document.createElement("a");
-      link.href = imageDataUrl;
-      link.download = `captured_image.${imageFormat.split("/")[1]}`;
-      link.click();
+  // const saveImage = () => {
+  //   if (imageDataUrl) {
+  //     const link = document.createElement("a");
+  //     link.href = imageDataUrl;
+  //     link.download = `captured_image.${imageFormat.split("/")[1]}`;
+  //     link.click();
 
-      setSaveMessage("Image saved!");
+  //     setSaveMessage("Image saved!");
 
-      // Optionally restart camera or perform another action
-      startCamera();
+  //     // Optionally restart camera or perform another action
+  //     startCamera();
 
-      setTimeout(() => {
-        setSaveMessage("");
-      }, 2000);
-    }
-  };
+  //     setTimeout(() => {
+  //       setSaveMessage("");
+  //     }, 2000);
+  //   }
+  // };
 
   return (
     <div className="container">
@@ -141,15 +142,19 @@ function Camera() {
         ref={canvasRef}
         style={{ display: isCaptured ? "block" : "none" }}
       />
-
+      {!isCaptured && (
+        <button onClick={() => navigate("/about")} className="button save">
+          About
+        </button>
+      )}
       {isCaptured ? (
         <>
           <button onClick={retakeImage} className="button retake">
             Retake Image
           </button>
-          <button onClick={saveImage} className="button save">
+          {/* <button onClick={saveImage} className="button save">
             Save Image
-          </button>
+          </button> */}
           <button onClick={uploadImageAndNavigate} className="button save">
             Process
           </button>
