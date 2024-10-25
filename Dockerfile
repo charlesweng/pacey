@@ -5,6 +5,7 @@ ENV MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1
 
 RUN apt-get update 
 RUN apt-get -y install python3 python3-pip gcc libmariadb3 libmariadb-dev
+RUN apt-get -y install nodejs
 
 COPY db /docker-entrypoint-initdb.d
 
