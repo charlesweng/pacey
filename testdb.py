@@ -12,7 +12,7 @@ conn = mariadb.connect(**config)
 cursor = conn.cursor()
 # query = f"SELECT customer_id, username FROM Customer WHERE username='charles' AND password='weng';"
 # query = f"SELECT patient_id FROM Patient WHERE patient_id='1' AND password='weng';"
-query = f"SELECT  patient_id, pacemaker_dependent, incision_location FROM Patient ORDER BY patient_id DESC;"
+query = f"SELECT  patient_id, pacemaker_dependent, incision_location, pacemaker_manufacturer, magnet_response, image_path FROM Patient ORDER BY patient_id DESC;"
 res = None
 try:
     conn = mariadb.connect(**config)
