@@ -5,7 +5,6 @@ import sys
 # file_name = "BosSci CRTD.pdf"
 def main():
     file_name = sys.argv[1]
-    print('file name is ', file_name)
     doc = fitz.open(file_name)
     zoom = 4
     mat = fitz.Matrix(zoom, zoom)
@@ -14,8 +13,7 @@ def main():
     for p in doc:
         count += 1
     for i in range(count):
-        val = f"./converted_files/image_{i+1}.png"
-        print('added img', i+1)
+        val = f"./converted_files/image_{i+1:03}.png"
         page = doc.load_page(i)
         pix = page.get_pixmap(matrix=mat)
         pix.save(val)

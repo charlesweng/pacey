@@ -6,7 +6,7 @@ function App() {
   return (
     <Router>
       <nav>
-        <Link to="/">CameraComponent</Link>
+        <Link to="/">Camera</Link>
       </nav>
 
       <Routes>
