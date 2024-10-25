@@ -11,9 +11,12 @@ WORKDIR /app
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
 
 COPY db /docker-entrypoint-initdb.d
 
 EXPOSE 3306
 
-CMD ["mysqld"]
+CMD ["/entrypoint.sh"]
+CMD ["-c"]
