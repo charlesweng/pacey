@@ -1,16 +1,20 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import CameraComponent from "./CameraComponent/CameraComponent";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import Camera from "./Camera/Camera";
+import Process from "./Process/Process";
 
 function App() {
   return (
     <Router>
-      <nav>
-        <Link to="/">Camera</Link>
-      </nav>
-
       <Routes>
-        <Route path="/" element={<CameraComponent />} />
+        <Route path="/" element={<Navigate to="/camera" replace />} />
+        <Route path="/camera" element={<Camera />} />
+        <Route path="/process" element={<Process />} />
       </Routes>
     </Router>
   );
