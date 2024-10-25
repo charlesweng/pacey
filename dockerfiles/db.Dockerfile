@@ -6,12 +6,13 @@ ENV MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1
 RUN apt-get update 
 RUN apt-get -y install python3 python3-pip gcc libmariadb3 libmariadb-dev
 
-COPY db /docker-entrypoint-initdb.d
 
 WORKDIR /app
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+
+COPY db /docker-entrypoint-initdb.d
 
 EXPOSE 3306
 
