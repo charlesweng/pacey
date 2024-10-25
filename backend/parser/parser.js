@@ -88,10 +88,9 @@ async function parse_document(doc_path) {
       }
     });
 
-    return all_text; // Return the final concatenated text
-
+    return all_text.toLowerCase();
   } else {
-    return await parse_img(doc_path);
+    return (await parse_img(doc_path)).toLowerCase();
   }
 }
 
