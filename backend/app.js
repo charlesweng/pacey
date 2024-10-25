@@ -17,9 +17,3 @@ if (!fs.existsSync(uploadDir)) {
 
 // Use the image routes
 app.use('/api/images', imageRoutes);
-
-// Start the server
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});

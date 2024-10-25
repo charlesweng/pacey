@@ -15,7 +15,7 @@ COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
 COPY db /docker-entrypoint-initdb.d
-COPY testdb.py /
+COPY testdb.py .
 
 EXPOSE 3306
 
