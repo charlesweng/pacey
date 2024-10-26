@@ -81,3 +81,64 @@ exports.saveImage = async (req, res) => {
         }
     });
 };
+
+//convert to datetime (for ui)
+function convertSecondsToDatetime(seconds) {
+    const date = new Date(seconds * 1000); // Convert seconds to milliseconds
+    return date.toISOString(); // Convert to ISO 8601 string
+}
+
+//want to display this in ui so gunna convert normal string imagepath
+function imageToBase64(imagePath) {
+    try {
+        const image = fs.readFileSync(imagePath);
+        return Buffer.from(image).toString('base64');
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+// imagecontroller
+// ===========
+// create a function called getPatientById
+// callremap to get the following json
+// {
+// implant_date -> convert timeinseconds into datetime string
+// impedance
+// battery
+// pacemaker_manufacturer
+// image_path -> image_path to a base64 string -> could be displayed on the ui
+// }
+exports.getPatientById = async (req, res) => {
+    const { patient_id } = req.params;
+    try {
+            const patient = await Patient.findByPk(patient_id);
+        
+        if(patient)
+        {
+            //found patient
+            patientDataRemapped = remapPatientKeys(res.status(200).patient.toJSON());
+
+            const Newdata = {
+                //convert implant data into datetime string
+                'implant_date': convertSecondsToDatetime(patientDataRemapped['implant_date']), //convert here
+                'pacemaker_manufacturer': patientDataRemapped['pacemaker_manufacturer'],
+                'impedance': patientDataRemapped['impedance'],
+                'battery': patientDataRemapped['battery'],
+                //image path to base64 string
+                'image_path': imageToBase64(patientDataRemapped['image_path']) //convert here
+            }
+            return res.status(200).json(Newdata);
+
+        } else{ throw new Error('No patient retrieved!'); }
+
+        // const patientJSON = patients.map(patient => remapPatientKeys(patient.toJSON()));
+        // console.log(patientJSON);
+       // return res.status(200).json(patientJSON);
+    } catch (error) {
+        console.error('Error fetching patient:', error);
+        return res.status(500).json({ error: `Error fetching patients: ${error}` });
+    }
+
+}
