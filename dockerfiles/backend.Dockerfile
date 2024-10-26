@@ -2,7 +2,7 @@ FROM node:latest
 # Use bash instead of sh
 SHELL ["/bin/bash", "-c"]
 
-WORKDIR ./app
+WORKDIR /app
 
 COPY backend/package*.json ./
 

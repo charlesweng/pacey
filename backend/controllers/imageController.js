@@ -25,29 +25,28 @@ exports.saveImage = async (req, res) => {
     // Remove the data URL prefix
     const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
 
-    console.log(base64Data);
     // Generate filename based on timestamp
     const timestamp = Date.now();
     const extension = match[1];
     const filename = `${timestamp}.${extension}`;
     const imagePath = path.join(__dirname, '../images', filename);
 
-    fs.writeFile(imagePath, base64Data, "base64", (err) => {
+    fs.writeFile(imagePath, base64Data, "base64", async (err) => {
         if (err) {
             console.error("Failed to save the image:", err);
             return res.status(500).json({ error: "Failed to save the image." });
         }
 
         try {
-            // Store patient data and image path in the database
-            // const patient = await Patient.create({
-            //     pacemaker_dependent,
-            //     incision_location,
-            //     pacemaker_manufacturer,
-            //     magnet_response,
-            //     impedance,
-            //     image_path: imagePath,
-            // });
+            //Store patient data and image path in the database
+            const patient = await Patient.create({
+                pacemaker_dependent,
+                incision_location,
+                pacemaker_manufacturer,
+                magnet_response,
+                impedance,
+                image_path: imagePath,
+            });
 
             res.status(201).json({ message: "Image saved and patient record created successfully."});
         } catch (error) {
