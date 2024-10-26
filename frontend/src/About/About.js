@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-// import "./About.css";
+import "./About.css";
 // import "../App.css";
 
 function About() {
@@ -8,21 +8,21 @@ function About() {
 
   return (
     <div className="container">
-      <h1>About This Project</h1>
+      <h1 className="header1">About This Project</h1>
       <p>Pacemaker</p>
       <h2>What we did</h2>
-      <ul>
+      <ul className="bullet-point">
         <li>Used Python Tesseract OCR module to read text on image.</li>
         <li>Capture images in real-time.</li>
       </ul>
 
       <h2>Features</h2>
-      <ul>
+      <ul className="bullet-point">
         <li>Access the device camera for image capturing.</li>
         <li>Process captured image into meaningful data.</li>
       </ul>
       <h2>How to Use</h2>
-      <ol>
+      <ol className="bullet-point">
         <li>Navigate to the Camera page using the button below.</li>
         <li>Grant camera access when prompted and capture image.</li>
         <li>Process the image and reap the benefits</li>

@@ -1,41 +1,35 @@
 /* Centered and responsive container */
 .process-container {
-    text-align: center; /* Align text to the center */
-    max-width: 100%;
-    margin: auto; /* Center the container */
-    min-height: 100vh; /* Full height to match App.css */
-    display: flex; /* Use flexbox for alignment */
-    flex-direction: column; /* Vertical alignment */
-    align-items: center; /* Center items horizontally */
-    justify-content: center; /* Center items vertically */
-    font-size: calc(10px + 2vmin); /* Responsive font size */
-    color: white; /* Text color */
-    background-color: #282c34; /* Match the background of App.css */
-  }
-  
-  h1 {
-    color: #61dafb; /* Blue color for the heading */
-    margin: 20px 0; /* Spacing for the heading */
-  }
-  
-  /* Button styling consistent with Camera.css */
-  .button {
-    padding: 12px 20px; /* Padding for buttons */
-    font-size: 16px; /* Font size */
-    margin: 10px 5px; /* Margins for spacing */
-    border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
-    color: white; /* Text color */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s; /* Transition effect */
-  }
-  
-  /* Specific button styles */
-  .button.retake {
-    background-color: #dc3545; /* Red color for retake button */
-  }
-  
-  .button.retake:hover {
-    background-color: #c82333; /* Darker red on hover */
-  }
-  
+  text-align: center; /* Align text to the center */
+  max-width: 100%;
+  margin: auto; /* Center the container */
+  min-height: 100vh; /* Full height to match App.css */
+  display: flex; /* Use flexbox for alignment */
+  flex-direction: column; /* Vertical alignment */
+  align-items: center; /* Center items horizontally */
+  justify-content: center; /* Center items vertically */
+  font-size: calc(10px + 2vmin); /* Responsive font size */
+  color: white; /* Text color */
+  background-color: #282c34; /* Match the background of App.css */
+}
+
+.button {
+  padding: 12px 20px; /* Padding for buttons */
+  font-size: 16px; /* Font size */
+  margin: 10px 5px; /* Margins for spacing */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners */
+  color: white; /* Text color */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Transition effect */
+}
+
+/* Specific button styles */
+.button.retake {
+  background-color: #dc3545; /* Red color for retake button */
+}
+
+.button.retake:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+

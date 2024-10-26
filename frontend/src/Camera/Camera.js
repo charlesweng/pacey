@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Camera.css";
-import "../App.css";
+// import "../App.css";
 
 function Camera() {
   const videoRef = useRef(null);
@@ -57,7 +57,7 @@ function Camera() {
         0,
         0,
         canvasRef.current.width,
-        canvasRef.current.height
+        canvasRef.current.height,
       );
       setIsCaptured(true);
 
@@ -83,13 +83,16 @@ function Camera() {
 
       // Send the image to your backend
       try {
-        const uploadResponse = await fetch("http://localhost:8000/api/images/upload", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json", // Indicates that the request body is JSON
+        const uploadResponse = await fetch(
+          "http://localhost:8000/api/images/upload",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json", // Indicates that the request body is JSON
+            },
+            body: JSON.stringify(payload), // Convert the payload object to a JSON string
           },
-          body: JSON.stringify(payload), // Convert the payload object to a JSON string
-        });
+        );
 
         if (!uploadResponse.ok) {
           throw new Error("Image upload failed");

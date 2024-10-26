@@ -9,6 +9,7 @@ import Camera from "./Camera/Camera";
 import Process from "./Process/Process";
 import About from "./About/About";
 import Table from "./Table/Table";
+import "./App.css";
 
 function App() {
   return (
