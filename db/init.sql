@@ -8,11 +8,11 @@
 
 CREATE TABLE Patient (
     patient_id INT AUTO_INCREMENT,
-    pacemaker_dependent INT NOT NULL,
-    incision_location VARCHAR(12) NOT NULL,
+    pacemaker_dependent INT,
+    incision_location VARCHAR(12),
     pacemaker_manufacturer VARCHAR(50),
     magnet_response VARCHAR(20),
-    impedance INT NOT NULL,
+    impedance VARCHAR(100),
     image_path VARCHAR(13383),
     PRIMARY KEY (patient_id)
 );

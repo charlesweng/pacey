@@ -12,7 +12,7 @@ async function textToJSON(filepath) {
       'pacemaker_dependent': parsedJson["implant"],
       'incision_location': '',
       'pacemaker_manufacturer': parsedJson["device"],
-      'magnet_response': (parsedJson["battery"][0].length >= 1) ? "ON" : "OFF",
+      'magnet_response': (parsedJson["battery"][0] && parsedJson["battery"][0].length >= 1) ? "ON" : "OFF",
       'impedance': parsedJson["impedance"].join(',')
     }
   

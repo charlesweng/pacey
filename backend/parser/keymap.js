@@ -51,6 +51,8 @@ function mapToCommonTerms(text) {
     return result;
 }
 
+
+
 // Example usage
 // let text = "The shock impedance and implant date are crucial metrics. The implant date is always verified. In some cases, shock impedance might vary.";
 // let foundTerms = mapToCommonTerms(text);

@@ -5,10 +5,15 @@ const path = require('path');
 const Patient = require('../models/Patient');
 const textToJSON = require('../parser/converter');
 
-(async () => {
-    const text = await processImage(IMG_PATH);
-    console.log('Recognized text:', JSON.stringify(text));
-})();
+exports.getAllImages = async (req, res) => {
+    try {
+        const patients = await Patient.findAll();
+        return res.status(200).json(patients);
+    } catch (error) {
+        console.error('Error fetching patients:', error);
+        return res.status(500).json({ error: `Error fetching patients: ${error}` });
+    }
+};
 
 // Function to save the base64 image and update database with image path
 exports.saveImage = async (req, res) => {
@@ -37,6 +42,8 @@ exports.saveImage = async (req, res) => {
     const filename = `${timestamp}.${extension}`;
     const imagePath = path.join(__dirname, '../images', filename);
 
+    let data = textToJSON(imagePath);
+
     fs.writeFile(imagePath, base64Data, "base64", async (err) => {
         if (err) {
             console.error("Failed to save the image:", err);
@@ -46,18 +53,14 @@ exports.saveImage = async (req, res) => {
         try {
             //Store patient data and image path in the database
             const patient = await Patient.create({
-                pacemaker_dependent,
-                incision_location,
-                pacemaker_manufacturer,
-                magnet_response,
-                impedance,
+                ...data,
                 image_path: imagePath,
             });
 
-            res.status(201).json({ message: "Image saved and patient record created successfully."});
+            return res.status(201).json({ message: "Image saved and patient record created successfully."});
         } catch (error) {
             console.error("Failed to save patient record:", error);
-            res.status(500).json({ error: "Failed to save patient record." });
+            return res.status(500).json({ error: "Failed to save patient record." });
         }
     });
 };

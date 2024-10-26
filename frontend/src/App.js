@@ -8,6 +8,7 @@ import {
 import Camera from "./Camera/Camera";
 import Process from "./Process/Process";
 import About from "./About/About";
+import Table from "./Table/Table";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/camera" element={<Camera />} />
         <Route path="/process" element={<Process />} />
+        <Route path="/table" element={<Table />} />
       </Routes>
     </Router>
   );

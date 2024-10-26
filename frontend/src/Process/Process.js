@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Process.css";
+import Table from "../Table/Table";
 
 function Process() {
   const navigate = useNavigate();
@@ -35,7 +36,6 @@ function Process() {
   return (
     <div className="process-container">
       <h1>Results</h1>
-
       <div className="results">
         <h2>Impedance</h2>
         <ul>
@@ -52,6 +52,7 @@ function Process() {
       <button onClick={() => navigate("/camera")} className="button retake">
         Camera
       </button>
+      <Table />
     </div>
   );
 }

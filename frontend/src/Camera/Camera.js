@@ -83,7 +83,7 @@ function Camera() {
 
       // Send the image to your backend
       try {
-        const uploadResponse = await fetch("YOUR_BACKEND_ENDPOINT_HERE", {
+        const uploadResponse = await fetch("http://localhost:8000/api/images/upload", {
           method: "POST",
           headers: {
             "Content-Type": "application/json", // Indicates that the request body is JSON

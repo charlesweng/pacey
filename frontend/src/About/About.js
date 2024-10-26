@@ -31,6 +31,9 @@ function About() {
         <button onClick={() => navigate("/camera")} className="button retake">
           Go to Camera
         </button>
+        <button onClick={() => navigate("/table")} className="button retake">
+          Existing Data
+        </button>
       </div>
     </div>
   );

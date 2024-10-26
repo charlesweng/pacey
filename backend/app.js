@@ -5,7 +5,9 @@ const app = express();
 const imageRoutes = require('./routes/imageRoutes');
 const path = require('path');
 const fs = require('fs');
+const cors = require('cors');
 
+app.use(cors());
 // Middleware to parse JSON requests
 app.use(express.json({ limit: '10mb' })); // Increase limit if needed
 
