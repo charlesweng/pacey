@@ -4,14 +4,16 @@ let mapToSpacesToSearch = {
     // "implant date": 0,
     // "implantdate": 0,
     // "pace impedance": 5,
+    "battery": 4,
     "impedance": 5,
     "implant": 0
 };
 
 function mapToCommonTerms(text) {
     let result = {
-        'implant': false,
-        'impedance': []
+        'implant': [],
+        'impedance': [],
+        'battery': []
     };
 
     for (let key in mapToSpacesToSearch) {
@@ -19,10 +21,13 @@ function mapToCommonTerms(text) {
         let matches;
         while ((matches = regex.exec(text)) !== null) {
             if (key === 'implant') {
-                result[key] = true;
+                result[key].push(matches[0].split('implant')[1]);
             }
             if (key === 'impedance') {
                 result[key].push(matches[0].split('impedance')[1]);
+            }
+            if (key === 'battery') {
+                result[key].push(matches[0].split('battery')[1]);
             }
         }
     }
