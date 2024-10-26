@@ -1,5 +1,3 @@
-// controllers/imageController.js
-
 const fs = require('fs');
 const path = require('path');
 const Patient = require('../models/Patient');
@@ -89,13 +87,13 @@ function convertSecondsToDatetime(seconds) {
 }
 
 //want to display this in ui so gunna convert normal string imagepath
-function imageToBase64(imagePath) {
+function convertToBase64(filePath) {
     try {
-        const image = fs.readFileSync(imagePath);
-        return Buffer.from(image).toString('base64');
+        const file = fs.readFileSync(filePath);
+        const base64String = file.toString('base64');
+        return base64String;
     } catch (error) {
-        console.error('Error:', error);
-        return null;
+        console.error('Error converting file:', error);
     }
 }
 
@@ -118,7 +116,7 @@ exports.getPatientById = async (req, res) => {
         if(patient)
         {
             //found patient
-            patientDataRemapped = remapPatientKeys(res.status(200).patient.toJSON());
+            patientDataRemapped = remapPatientKeys(patient.toJSON());
 
             const Newdata = {
                 //convert implant data into datetime string
@@ -127,7 +125,7 @@ exports.getPatientById = async (req, res) => {
                 'impedance': patientDataRemapped['impedance'],
                 'battery': patientDataRemapped['battery'],
                 //image path to base64 string
-                'image_path': imageToBase64(patientDataRemapped['image_path']) //convert here
+                'image_path': convertToBase64(patientDataRemapped['image_path']) //convert here
             }
             return res.status(200).json(Newdata);
 
