@@ -1,5 +1,4 @@
 // take a pdf, jpg, or png and parse into text
-
 const Tesseract = require('tesseract.js');
 const { spawn } = require('child_process');
 const fs = require('fs');
@@ -94,9 +93,13 @@ async function parse_document(doc_path) {
   }
 }
 
-const IMG_PATH = "./BosSciCRTD.pdf";
+// const IMG_PATH = "./boston.png";
 // Call the async function
-(async () => {
-  const text = await parse_document(IMG_PATH);
-  console.log('Recognized text:', text);
-})();
+// (async () => {
+//   const text = await parse_document(IMG_PATH);
+//   console.log('Recognized text:', text);
+// })();
+
+
+
+module.exports = parse_document;

@@ -3,6 +3,12 @@
 const fs = require('fs');
 const path = require('path');
 const Patient = require('../models/Patient');
+const textToJSON = require('../parser/converter');
+
+(async () => {
+    const text = await processImage(IMG_PATH);
+    console.log('Recognized text:', JSON.stringify(text));
+})();
 
 // Function to save the base64 image and update database with image path
 exports.saveImage = async (req, res) => {
