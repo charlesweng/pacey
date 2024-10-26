@@ -1,180 +1,195 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Camera.css";
-// import "../App.css";
 
 function Camera() {
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  const [isCaptured, setIsCaptured] = useState(false);
-  const [error, setError] = useState(null);
-  const [imageFormat] = useState("image/png");
-  const [imageDataUrl, setImageDataUrl] = useState(null);
-  // const [saveMessage, setSaveMessage] = useState("");
-  const navigate = useNavigate();
+    const videoRef = useRef(null);
+    const canvasRef = useRef(null);
+    const [isCaptured, setIsCaptured] = useState(false);
+    const [error, setError] = useState(null);
+    const [imageFormat] = useState("image/png");
+    const [imageDataUrl, setImageDataUrl] = useState(null);
+    const [devices, setDevices] = useState([]);
+    const [selectedDeviceId, setSelectedDeviceId] = useState(null);
+    const navigate = useNavigate();
 
-  const startCamera = async () => {
-    try {
-      const constraints = {
-        video: {
-          facingMode: { ideal: "environment" },
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-        },
-      };
+    const startCamera = async (deviceId) => {
+        try {
+            const constraints = {
+                video: {
+                    deviceId: deviceId ? { exact: deviceId } : undefined,
+                    facingMode: { ideal: "environment" },
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                },
+            };
 
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (error) {
-      setError("Error accessing the camera. Please check permissions.");
-      console.error("Error accessing the camera", error);
-    }
-  };
-
-  useEffect(() => {
-    startCamera();
-
-    const videoElement = videoRef.current;
-
-    return () => {
-      if (videoElement && videoElement.srcObject) {
-        const stream = videoElement.srcObject;
-        const tracks = stream.getTracks();
-        tracks.forEach((track) => track.stop());
-      }
-    };
-  }, []);
-
-  const captureImage = () => {
-    if (videoRef.current && canvasRef.current) {
-      const context = canvasRef.current.getContext("2d");
-      canvasRef.current.width = videoRef.current.videoWidth;
-      canvasRef.current.height = videoRef.current.videoHeight;
-      context.drawImage(
-        videoRef.current,
-        0,
-        0,
-        canvasRef.current.width,
-        canvasRef.current.height,
-      );
-      setIsCaptured(true);
-
-      const dataUrl = canvasRef.current.toDataURL(imageFormat);
-      setImageDataUrl(dataUrl);
-    }
-  };
-
-  const retakeImage = () => {
-    const context = canvasRef.current.getContext("2d");
-    context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-    setIsCaptured(false);
-    setImageDataUrl(null);
-    startCamera();
-  };
-
-  const uploadImageAndNavigate = async () => {
-    if (imageDataUrl) {
-      const payload = {
-        base64Image: imageDataUrl,
-      };
-      console.log(payload);
-
-      // Send the image to your backend
-      try {
-        const uploadResponse = await fetch(
-          "http://localhost:8000/api/images/upload",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json", // Indicates that the request body is JSON
-            },
-            body: JSON.stringify(payload), // Convert the payload object to a JSON string
-          },
-        );
-
-        if (!uploadResponse.ok) {
-          throw new Error("Image upload failed");
+            const stream = await navigator.mediaDevices.getUserMedia(
+                constraints
+            );
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+            }
+        } catch (error) {
+            setError("Error accessing the camera. Please check permissions.");
+            console.error("Error accessing the camera", error);
         }
+    };
 
-        // setSaveMessage("Image uploaded successfully!");
+    const getDevices = async () => {
+        try {
+            const mediaDevices =
+                await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = mediaDevices.filter(
+                (device) => device.kind === "videoinput"
+            );
+            setDevices(videoDevices);
+            if (videoDevices.length > 0) {
+                setSelectedDeviceId(videoDevices[0].deviceId);
+                startCamera(videoDevices[0].deviceId);
+            }
+        } catch (error) {
+            console.error("Error fetching media devices:", error);
+        }
+    };
 
-        // Navigate to the Process component after successful upload
-        navigate("/process");
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        // setSaveMessage("Failed to upload image.");
-      } finally {
-        // Optional: Reset the camera after upload
-        retakeImage();
-      }
-    }
-  };
+    useEffect(() => {
+        getDevices();
 
-  // const saveImage = () => {
-  //   if (imageDataUrl) {
-  //     const link = document.createElement("a");
-  //     link.href = imageDataUrl;
-  //     link.download = `captured_image.${imageFormat.split("/")[1]}`;
-  //     link.click();
+        return () => {
+            if (videoRef.current && videoRef.current.srcObject) {
+                const tracks = videoRef.current.srcObject.getTracks();
+                tracks.forEach((track) => track.stop());
+            }
+        };
+    }, []);
 
-  //     setSaveMessage("Image saved!");
+    const handleDeviceChange = (e) => {
+        const deviceId = e.target.value;
+        setSelectedDeviceId(deviceId);
+        startCamera(deviceId);
+    };
 
-  //     // Optionally restart camera or perform another action
-  //     startCamera();
+    const captureImage = () => {
+        if (videoRef.current && canvasRef.current) {
+            const context = canvasRef.current.getContext("2d");
+            canvasRef.current.width = videoRef.current.videoWidth;
+            canvasRef.current.height = videoRef.current.videoHeight;
+            context.drawImage(
+                videoRef.current,
+                0,
+                0,
+                canvasRef.current.width,
+                canvasRef.current.height
+            );
+            setIsCaptured(true);
 
-  //     setTimeout(() => {
-  //       setSaveMessage("");
-  //     }, 2000);
-  //   }
-  // };
+            const dataUrl = canvasRef.current.toDataURL(imageFormat);
+            setImageDataUrl(dataUrl);
+        }
+    };
 
-  return (
-    <div className="container">
-      {error && <p className="error">{error}</p>}
-      <video
-        ref={videoRef}
-        autoPlay
-        playsInline
-        style={{
-          display: isCaptured ? "none" : "block",
-        }}
-      />
-      <canvas
-        ref={canvasRef}
-        style={{ display: isCaptured ? "block" : "none" }}
-      />
-      {!isCaptured && (
-        <button onClick={() => navigate("/about")} className="button save">
-          About
-        </button>
-      )}
-      {isCaptured ? (
-        <>
-          <button onClick={retakeImage} className="button retake">
-            Retake Image
-          </button>
-          {/* <button onClick={saveImage} className="button save">
-            Save Image
-          </button> */}
-          <button onClick={uploadImageAndNavigate} className="button save">
-            Process
-          </button>
-        </>
-      ) : (
-        <button onClick={captureImage} className="button capture">
-          Capture Image
-        </button>
-      )}
+    const retakeImage = () => {
+        const context = canvasRef.current.getContext("2d");
+        context.clearRect(
+            0,
+            0,
+            canvasRef.current.width,
+            canvasRef.current.height
+        );
+        setIsCaptured(false);
+        setImageDataUrl(null);
+        startCamera(selectedDeviceId);
+    };
 
-      {/* {saveMessage && (
-        <div className="overlay">
-          <div className="message">{saveMessage}</div>
+    const uploadImageAndNavigate = async () => {
+        if (imageDataUrl) {
+            const payload = {
+                base64Image: imageDataUrl,
+            };
+            console.log(payload);
+
+            try {
+                const uploadResponse = await fetch(
+                    "http://localhost:8000/api/images/upload",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(payload),
+                    }
+                );
+
+                if (!uploadResponse.ok) {
+                    throw new Error("Image upload failed");
+                }
+
+                navigate("/process");
+            } catch (error) {
+                console.error("Error uploading image:", error);
+            } finally {
+                retakeImage();
+            }
+        }
+    };
+
+    return (
+        <div className="container">
+            {error && <p className="error">{error}</p>}
+
+            {/* Media Devices Dropdown */}
+            <select
+                onChange={handleDeviceChange}
+                value={selectedDeviceId || ""}
+                className="device-dropdown"
+            >
+                {devices.map((device) => (
+                    <option key={device.deviceId} value={device.deviceId}>
+                        {device.label || `Camera ${device.deviceId}`}
+                    </option>
+                ))}
+            </select>
+
+            <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                style={{
+                    display: isCaptured ? "none" : "block",
+                }}
+            />
+            <canvas
+                ref={canvasRef}
+                style={{ display: isCaptured ? "block" : "none" }}
+            />
+            {!isCaptured && (
+                <button
+                    onClick={() => navigate("/about")}
+                    className="button save"
+                >
+                    About
+                </button>
+            )}
+            {isCaptured ? (
+                <>
+                    <button onClick={retakeImage} className="button retake">
+                        Retake Image
+                    </button>
+                    <button
+                        onClick={uploadImageAndNavigate}
+                        className="button save"
+                    >
+                        Process
+                    </button>
+                </>
+            ) : (
+                <button onClick={captureImage} className="button capture">
+                    Capture Image
+                </button>
+            )}
         </div>
-      )} */}
-    </div>
-  );
+    );
 }
 
 export default Camera;

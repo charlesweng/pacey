@@ -1,31 +1,35 @@
-const fs = require('fs');
-const path = require('path');
-const Patient = require('../models/Patient');
-const textToJSON = require('../parser/converter');
+const fs = require("fs");
+const path = require("path");
+const Patient = require("../models/Patient");
+const textToJSON = require("../parser/converter");
 
 function remapPatientKeys(jsonObj) {
     const data = {
-        'implant_date': jsonObj['pacemaker_dependent'],
-        'pacemaker_manufacturer': jsonObj['pacemaker_manufacturer'],
-        'impedance': jsonObj['impedance'],
-        'id': jsonObj['patient_id'],
-        'battery': jsonObj['magnet_response'],
-        'image_path': jsonObj['image_path']
-    }
+        implant_date: jsonObj["pacemaker_dependent"],
+        pacemaker_manufacturer: jsonObj["pacemaker_manufacturer"],
+        impedance: jsonObj["impedance"],
+        id: jsonObj["patient_id"],
+        battery: jsonObj["magnet_response"],
+        image_path: jsonObj["image_path"],
+    };
     return data;
 }
 
 exports.getAllImages = async (req, res) => {
     try {
         const patients = await Patient.findAll({
-            order: [['patient_id', 'DESC']] // Order by patient_id in descending order
+            order: [["patient_id", "DESC"]], // Order by patient_id in descending order
         });
-        const patientJSON = patients.map(patient => remapPatientKeys(patient.toJSON()));
+        const patientJSON = patients.map((patient) =>
+            remapPatientKeys(patient.toJSON())
+        );
         // console.log(patientJSON);
         return res.status(200).json(patientJSON);
     } catch (error) {
-        console.error('Error fetching patients:', error);
-        return res.status(500).json({ error: `Error fetching patients: ${error}` });
+        console.error("Error fetching patients:", error);
+        return res
+            .status(500)
+            .json({ error: `Error fetching patients: ${error}` });
     }
 };
 
@@ -44,19 +48,19 @@ exports.saveImage = async (req, res) => {
     // Extract the image format and validate it
     const match = base64Image.match(/^data:image\/(png|jpg|jpeg);base64,/);
     if (!match) {
-        return res.status(400).json({ error: "Invalid image format. Only PNG, JPG, and JPEG are allowed." });
+        return res.status(400).json({
+            error: "Invalid image format. Only PNG, JPG, and JPEG are allowed.",
+        });
     }
 
     // Remove the data URL prefix
-    const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
+    const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
 
     // Generate filename based on timestamp
     const timestamp = Date.now();
     const extension = match[1];
     const filename = `${timestamp}.${extension}`;
-    const imagePath = path.join(__dirname, '../images', filename);
-
-    let data = await textToJSON(imagePath);
+    const imagePath = path.join(__dirname, "../images", filename);
 
     fs.writeFile(imagePath, base64Data, "base64", async (err) => {
         if (err) {
@@ -65,6 +69,8 @@ exports.saveImage = async (req, res) => {
         }
 
         try {
+            let data = await textToJSON(imagePath);
+
             //Store patient data and image path in the database
             console.log(JSON.stringify(data));
             const patient = await Patient.create({
@@ -72,10 +78,14 @@ exports.saveImage = async (req, res) => {
                 image_path: imagePath,
             });
 
-            return res.status(201).json({ message: "Image saved and patient record created successfully."});
+            return res.status(201).json({
+                message: "Image saved and patient record created successfully.",
+            });
         } catch (error) {
             console.error("Failed to save patient record:", error);
-            return res.status(500).json({ error: "Failed to save patient record." });
+            return res
+                .status(500)
+                .json({ error: "Failed to save patient record." });
         }
     });
 };
@@ -90,10 +100,10 @@ function convertSecondsToDatetime(seconds) {
 function convertToBase64(filePath) {
     try {
         const file = fs.readFileSync(filePath);
-        const base64String = file.toString('base64');
+        const base64String = file.toString("base64");
         return base64String;
     } catch (error) {
-        console.error('Error converting file:', error);
+        console.error("Error converting file:", error);
     }
 }
 
@@ -111,32 +121,36 @@ function convertToBase64(filePath) {
 exports.getPatientById = async (req, res) => {
     const { patient_id } = req.params;
     try {
-            const patient = await Patient.findByPk(patient_id);
-        
-        if(patient)
-        {
+        const patient = await Patient.findByPk(patient_id);
+
+        if (patient) {
             //found patient
             patientDataRemapped = remapPatientKeys(patient.toJSON());
 
             const Newdata = {
                 //convert implant data into datetime string
-                'implant_date': convertSecondsToDatetime(patientDataRemapped['implant_date']), //convert here
-                'pacemaker_manufacturer': patientDataRemapped['pacemaker_manufacturer'],
-                'impedance': patientDataRemapped['impedance'],
-                'battery': patientDataRemapped['battery'],
+                implant_date: convertSecondsToDatetime(
+                    patientDataRemapped["implant_date"]
+                ), //convert here
+                pacemaker_manufacturer:
+                    patientDataRemapped["pacemaker_manufacturer"],
+                impedance: patientDataRemapped["impedance"],
+                battery: patientDataRemapped["battery"],
                 //image path to base64 string
-                'image_path': convertToBase64(patientDataRemapped['image_path']) //convert here
-            }
+                image_path: convertToBase64(patientDataRemapped["image_path"]), //convert here
+            };
             return res.status(200).json(Newdata);
-
-        } else{ throw new Error('No patient retrieved!'); }
+        } else {
+            throw new Error("No patient retrieved!");
+        }
 
         // const patientJSON = patients.map(patient => remapPatientKeys(patient.toJSON()));
         // console.log(patientJSON);
-       // return res.status(200).json(patientJSON);
+        // return res.status(200).json(patientJSON);
     } catch (error) {
-        console.error('Error fetching patient:', error);
-        return res.status(500).json({ error: `Error fetching patients: ${error}` });
+        console.error("Error fetching patient:", error);
+        return res
+            .status(500)
+            .json({ error: `Error fetching patients: ${error}` });
     }
-
-}
+};

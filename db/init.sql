@@ -8,7 +8,7 @@
 
 CREATE TABLE Patient (
     patient_id INT AUTO_INCREMENT,
-    pacemaker_dependent INT,
+    pacemaker_dependent BIGINT,
     incision_location VARCHAR(12),
     pacemaker_manufacturer VARCHAR(50),
     magnet_response VARCHAR(20),

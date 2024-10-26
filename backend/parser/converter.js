@@ -7,7 +7,7 @@ async function textToJSON(filepath) {
     const parsedJson = mapToCommonTerms(text);
   
     const data = {
-      'pacemaker_dependent': (parsedJson["implant"] && parsedJson["implant"].length > 0) ? parsedJson["implant"][0] : -1,
+      'pacemaker_dependent': (parsedJson["implant"] && parsedJson["implant"].length > 0) ? parsedJson["implant"][0] : 10000,
       'incision_location': 'TBD',
       'pacemaker_manufacturer': (parsedJson['device'] && parsedJson["device"].join('').trim().length == 0) ? 'unknown' : parsedJson["device"].join(','),
       'magnet_response': (parsedJson["battery"][0] && parsedJson["battery"][0].length >= 1) ? "ON" : "OFF",
