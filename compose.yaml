@@ -10,13 +10,9 @@ services:
     volumes:
       - ./db/mysqldb:/var/lib/mysql
       - ./db:/docker-entrypoint-initdb.d
-  # db:
-  #   build:
-  #     context: .
-  #     dockerfile: dockerfiles/db.Dockerfile
-  #   container_name: db_container
-  #   ports:
-  #     - "3306:3306"
+    networks:
+      - mynetwork
+
   backend:
     build:
       context: .
@@ -24,6 +20,9 @@ services:
     container_name: backend_container
     ports:
       - "8000:8000"
+    networks:
+      - mynetwork
+
   frontend:
     build:
       context: .
@@ -33,5 +32,8 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
-    depends_on:
-      - backend
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:

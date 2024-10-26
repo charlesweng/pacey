@@ -3,7 +3,7 @@
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize("flask_app", 'root', '', {
-    host: '127.0.0.1', // or your database host
+    host: 'db', // or your database host
     dialect: 'mysql', // specifies using MariaDB
     port: 3306, // default port for MariaDB
 });

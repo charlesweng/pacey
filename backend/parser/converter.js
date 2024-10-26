@@ -3,17 +3,15 @@ const parse_document = require('./parser');
 
 // Helper function for processing images
 async function textToJSON(filepath) {
-    // skip: perform sequelize call to get table data from mariadb:3306 try 0.0.0.0 or 127.0.0.1 as the host
-    const img_path = "./boston.png";
     const text = await parse_document(filepath);
     const parsedJson = mapToCommonTerms(text);
   
     const data = {
-      'pacemaker_dependent': parsedJson["implant"],
-      'incision_location': '',
-      'pacemaker_manufacturer': parsedJson["device"],
+      'pacemaker_dependent': (parsedJson["implant"] && parsedJson["implant"].length > 0) ? parsedJson["implant"][0] : -1,
+      'incision_location': 'TBD',
+      'pacemaker_manufacturer': (parsedJson['device'] && parsedJson["device"].join('').trim().length == 0) ? 'unknown' : parsedJson["device"].join(','),
       'magnet_response': (parsedJson["battery"][0] && parsedJson["battery"][0].length >= 1) ? "ON" : "OFF",
-      'impedance': parsedJson["impedance"].join(',')
+      'impedance': (parsedJson['impedance'] && parsedJson['impedance'].length == 0) ? 'unknown' : parsedJson["impedance"].join(',')
     }
   
     return data;

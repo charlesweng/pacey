@@ -36,13 +36,14 @@ const Table = ({ rows = ROS }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    const [_, setData] = useState([]);
+    const [data, setData] = useState([]);
 
     const fetchData = async () => {
-        const response = await fetch('https://localhost:8000/api/images/allimages');
+        const response = await fetch('http://localhost:8000/api/images/allimages');
         if (response.ok) {
-            const data = await response.json();
-            setData(data);
+            const dat = await response.json();
+            console.log(dat);
+            setData(dat);
         } else {
             console.error('Error:', response.status, response.statusText);
         }
@@ -63,7 +64,7 @@ const Table = ({ rows = ROS }) => {
 
     return (
         <div>
-            <button onClick={fetchData}>Refresh</button>
+            <button onClick={fetchData} className='button retake'>Refresh</button>
             <table>
                 <thead>
                     <tr>
@@ -71,27 +72,29 @@ const Table = ({ rows = ROS }) => {
                         <th>Implant Date</th>
                         <th>Impedance</th>
                         <th>Battery</th>
+                        <th>Manufacturer</th>
                         <th>ImagePath</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {(/*data ||*/ rows).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                    {(data || rows).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                         <tr key={row.id}>
                             <td>{row.id}</td>
-                            <td>{row.implantdate}</td>
+                            <td>{row.implant_date}</td>
                             <td>{row.impedance}</td>
                             <td>{row.battery}</td>
-                            <td>{row.imagepath}</td>
+                            <td>{row.pacemaker_manufacturer}</td>
+                            <td>{row.image_path}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
             <div className="pagination">
-                <button onClick={() => handleChangePage(page - 1)} disabled={page === 0}>
+                <button onClick={() => handleChangePage(page - 1)} disabled={page === 0} className='button retake'>
                     Previous
                 </button>
                 <span>Page {page + 1}</span>
-                <button onClick={() => handleChangePage(page + 1)} disabled={page >= Math.ceil((/*data || */rows).length / rowsPerPage) - 1}>
+                <button className='button retake' onClick={() => handleChangePage(page + 1)} disabled={page >= Math.ceil((data || rows).length / rowsPerPage) - 1}>
                     Next
                 </button>
                 <select value={rowsPerPage} onChange={handleChangeRowsPerPage}>

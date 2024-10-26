@@ -35,6 +35,7 @@ function Process() {
 
   return (
     <div className="process-container">
+      <Table />
       <h1>Results</h1>
       <div className="results">
         <h2>Impedance</h2>
@@ -52,7 +53,6 @@ function Process() {
       <button onClick={() => navigate("/camera")} className="button retake">
         Camera
       </button>
-      <Table />
     </div>
   );
 }

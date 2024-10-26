@@ -5,10 +5,26 @@ const path = require('path');
 const Patient = require('../models/Patient');
 const textToJSON = require('../parser/converter');
 
+function remapPatientKeys(jsonObj) {
+    const data = {
+        'implant_date': jsonObj['pacemaker_dependent'],
+        'pacemaker_manufacturer': jsonObj['pacemaker_manufacturer'],
+        'impedance': jsonObj['impedance'],
+        'id': jsonObj['patient_id'],
+        'battery': jsonObj['magnet_response'],
+        'image_path': jsonObj['image_path']
+    }
+    return data;
+}
+
 exports.getAllImages = async (req, res) => {
     try {
-        const patients = await Patient.findAll();
-        return res.status(200).json(patients);
+        const patients = await Patient.findAll({
+            order: [['patient_id', 'DESC']] // Order by patient_id in descending order
+        });
+        const patientJSON = patients.map(patient => remapPatientKeys(patient.toJSON()));
+        // console.log(patientJSON);
+        return res.status(200).json(patientJSON);
     } catch (error) {
         console.error('Error fetching patients:', error);
         return res.status(500).json({ error: `Error fetching patients: ${error}` });
@@ -42,7 +58,7 @@ exports.saveImage = async (req, res) => {
     const filename = `${timestamp}.${extension}`;
     const imagePath = path.join(__dirname, '../images', filename);
 
-    let data = textToJSON(imagePath);
+    let data = await textToJSON(imagePath);
 
     fs.writeFile(imagePath, base64Data, "base64", async (err) => {
         if (err) {
@@ -52,6 +68,7 @@ exports.saveImage = async (req, res) => {
 
         try {
             //Store patient data and image path in the database
+            console.log(JSON.stringify(data));
             const patient = await Patient.create({
                 ...data,
                 image_path: imagePath,
