@@ -17,3 +17,5 @@ if (!fs.existsSync(uploadDir)) {
 
 // Use the image routes
 app.use('/api/images', imageRoutes);
+
+module.exports = app;
