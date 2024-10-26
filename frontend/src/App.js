@@ -7,12 +7,14 @@ import {
 } from "react-router-dom";
 import Camera from "./Camera/Camera";
 import Process from "./Process/Process";
+import About from "./About/About";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/camera" replace />} />
+        <Route path="/" element={<Navigate to="/about" replace />} />
+        <Route path="/about" element={<About />} />
         <Route path="/camera" element={<Camera />} />
         <Route path="/process" element={<Process />} />
       </Routes>

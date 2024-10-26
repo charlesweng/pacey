@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+.container {
+  text-align: center; /* Align text to the center */
+  max-width: 100%;
+  margin: auto; /* Center the container */
+  min-height: 100vh; /* Full height to match App.css */
+  justify-content: center; /* Center items vertically */
+  font-size: calc(10px + 2vmin); /* Responsive font size */
+  color: white; /* Text color */
+  background-color: #282c34; /* Match the background of App.css */
+  position: relative;
+}
+
