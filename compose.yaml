@@ -1,13 +1,22 @@
 services:
   db:
-    build:
-      context: .
-      dockerfile: dockerfiles/db.Dockerfile
+    image: mariadb:10.6.2
     container_name: db_container
+    environment:
+      - MYSQL_DATABASE=flask_app
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1
     ports:
       - "3306:3306"
     volumes:
-      - db:/var/lib/mysql
+      - ./db/mysqldb:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d
+  # db:
+  #   build:
+  #     context: .
+  #     dockerfile: dockerfiles/db.Dockerfile
+  #   container_name: db_container
+  #   ports:
+  #     - "3306:3306"
   backend:
     build:
       context: .
@@ -22,8 +31,7 @@ services:
     container_name: frontend_container
     ports:
       - "3000:3000"
+    volumes:
+      - ./frontend:/app
     depends_on:
       - backend
-
-volumes:
-  db:
